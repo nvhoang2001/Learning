@@ -1,9 +1,3 @@
-<style> 
-.center {
-    text-align: center;
-}
-</style>
-
 # Trang web thêm lời nhắc cơ bản
 
 HTML code:
@@ -33,6 +27,8 @@ HTML code:
 	</body>
 </html>
 ```
+
+Js code:
 
 ```js
 Vue.createApp({
