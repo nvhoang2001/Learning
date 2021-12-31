@@ -52,7 +52,7 @@ const app = Vue.createApp({
 		},
 		outputFullname() {
 			console.log("Name is leveraging");
-			return this.name === "" ? "" : `Ngo Viet ${this.name}`;
+			return this.name === "" ? "" : `${this.lastName} ${this.name}`;
 		},
 	},
 });
