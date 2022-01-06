@@ -12,7 +12,7 @@ const router = createRouter({
 	routes: [
 		{
 			path: '/',
-			component: BaseModal,
+			redirect: '/users',
 		},
 		{
 			path: '/users',
@@ -27,5 +27,6 @@ const router = createRouter({
 
 app.use(router);
 app.component('base-modal', BaseModal);
-
-app.mount('#app');
+router.isReady().then(() => {
+	app.mount('#app');
+});

@@ -1,139 +1,12 @@
 <template>
-	<div>
-		<div class="container">
-			<user-list />
-		</div>
-		<div class="container">
-			<div class="block" :class="{ animate: animatedBlock }"></div>
-			<button @click="animateBlock">Animate</button>
-		</div>
-		<div class="container">
-			<!-- Component sẽ không sử dụng css -->
-			<transition
-				:css="false"
-				@before-enter="beforeEnter"
-				@enter="enter"
-				@after-enter="afterEnter"
-				@before-leave="beforeLeave"
-				@leave="leave"
-				@after-leave="afterLeave"
-				@enter-cancelled="enterCancelled"
-				@leave-cancelled="leaveCancelled"
-			>
-				<p v-if="showParagraph">This is only sometime invisible</p>
-			</transition>
-			<button @click="toggleParagraph">Toggle paragraph</button>
-		</div>
-		<div class="container">
-			<transition name="fade-button" mode="out-in">
-				<button @click="showUsers" v-if="!showUsersBtn">
-					Show Users
-				</button>
-				<button @click="hideUsers" v-else>Hide Users</button>
-			</transition>
-		</div>
-		<base-modal @close="hideDialog" :open="dialogIsVisible">
-			<p>This is a test dialog!</p>
-			<button @click="hideDialog">Close it!</button>
-		</base-modal>
-		<div class="container">
-			<button @click="showDialog">Show Dialog</button>
-		</div>
-	</div>
+	<router-view v-slot="slotProps">
+		<transition name="fade-button" mode="out-in">
+			<component :is="slotProps.Component"></component>
+		</transition>
+	</router-view>
 </template>
 
-<script>
-import UserList from './components/UserList.vue';
-
-export default {
-	components: { UserList },
-	data() {
-		return {
-			dialogIsVisible: false,
-			animatedBlock: false,
-			showParagraph: false,
-			showUsersBtn: false,
-			enterInterval: null,
-			leaveInterval: null,
-		};
-	},
-	methods: {
-		enterCancelled(e) {
-			e.style.opacity = 0;
-			clearInterval(this.enterInterval);
-		},
-		leaveCancelled(e) {
-			e.style.opacity = 1;
-			clearInterval(this.leaveInterval);
-		},
-		beforeEnter(e) {
-			console.log('Before enter event');
-			console.log(e);
-			e.style.opacity = 0;
-		},
-
-		enter(e, done) {
-			console.log('Enter');
-			console.log(e);
-			let round = 1;
-			this.enterInterval = setInterval(() => {
-				e.style.opacity = round * 0.01;
-				round++;
-				if (round > 100) {
-					clearInterval(this.enterInterval);
-					done();
-				}
-			}, 20);
-		},
-		afterEnter(e) {
-			console.log('After enter');
-			console.log(e);
-		},
-		beforeLeave(e) {
-			console.log('Before leave event');
-			console.log(e);
-		},
-		leave(e, done) {
-			console.log('Leave');
-			console.log(e);
-			let round = 1;
-			this.leaveInterval = setInterval(() => {
-				e.style.opacity = 1 - round * 0.01;
-				round++;
-				if (round > 100) {
-					clearInterval(this.leaveInterval);
-					done();
-				}
-			}, 20);
-		},
-		afterLeave(e) {
-			console.log('After leave');
-			console.log(e);
-		},
-		showUsers() {
-			this.showUsersBtn = true;
-		},
-		hideUsers() {
-			this.showUsersBtn = false;
-		},
-		showDialog() {
-			this.dialogIsVisible = true;
-		},
-		toggleParagraph() {
-			this.showParagraph = !this.showParagraph;
-		},
-		hideDialog() {
-			this.dialogIsVisible = false;
-		},
-		animateBlock() {
-			this.animatedBlock = true;
-			setTimeout(() => {
-				this.animatedBlock = false;
-			}, 500);
-		},
-	},
-};
-</script>
+<script></script>
 
 <style>
 * {
@@ -198,6 +71,14 @@ button:active {
 .fade-button-enter-to,
 .fade-button-enter-from {
 	opacity: 1;
+}
+
+.route-enter-active {
+	animation: slide-fade 0.3s ease-out;
+}
+
+.route-leave-active {
+	animation: slide-fade 0.3s ease-in;
 }
 
 @keyframes slide-fade {
