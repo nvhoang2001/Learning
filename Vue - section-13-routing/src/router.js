@@ -24,7 +24,6 @@ const router = createRouter({
                     name: 'team-member',
                     path: ':teamID',
                     component: TeamMembers,
-                    props: true, // Pass teamID as props rather using this.route
                 },
             ],
         },
@@ -35,12 +34,6 @@ const router = createRouter({
                 footer: UserFooter,
             },
             meta: { needAuth: true },
-            beforeEnter(to, from, next) {
-                console.log('Route before enter');
-                console.log(to);
-                console.log(from);
-                next();
-            },
         },
         {
             path: '/:notFound(.*)',
@@ -48,11 +41,7 @@ const router = createRouter({
         },
     ],
     linkActiveClass: 'active',
-    scrollBehavior(to, from, savedPosition) {
-        console.log(to);
-        console.log(from);
-        console.log(savedPosition);
-
+    scrollBehavior(_, _2, savedPosition) {
         if (savedPosition) {
             return savedPosition;
         }
@@ -63,26 +52,6 @@ const router = createRouter({
             behavior: 'smooth',
         };
     },
-});
-
-// Run before each navigation
-router.beforeEach((to, from, next) => {
-    console.log('Global beforeEach');
-    console.log(to);
-    console.log(from);
-    if (to.meta.needAuth) {
-        console.log('Route need auth to navigate');
-    }
-
-    next();
-});
-
-// Run after each navigation
-// Ofter use for sending analytics
-router.afterEach((to, from) => {
-    console.log('Global afterEach');
-    console.log(to);
-    console.log(from);
 });
 
 export default router;
