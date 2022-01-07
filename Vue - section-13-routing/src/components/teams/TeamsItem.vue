@@ -16,17 +16,7 @@ export default {
                 params: {
                     teamID: this.id,
                 },
-                query: {
-                    sort: 'asc',
-                },
             };
-
-            // this.$router.push({
-            //     name: 'team-member',
-            //     params: {
-            //         teamID: this.id,
-            //     },
-            // });
         },
     },
 };

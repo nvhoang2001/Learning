@@ -34,19 +34,9 @@ export default {
             this.savedChanges = true;
         },
     },
-    beforeRouteEnter(to, from, next) {
-        console.log('Component before enter');
-        console.log(to);
-        console.log(from);
-        next();
-    },
     beforeRouteLeave(to, from, next) {
-        console.log('Before route leave');
-        console.log(to);
-        console.log(from);
         if (!this.savedChanges) {
             const ans = confirm('Do you really want to leave?');
-            console.log(ans);
             next(ans);
         } else next();
     },
