@@ -2,7 +2,7 @@
     <li>
         <h3>{{ name }}</h3>
         <div class="team-members">{{ memberCount }} Members</div>
-        <router-link :to="teamLink">View Members</router-link>
+        <router-link :to="'teams/' + teamLink">View Members</router-link>
     </li>
 </template>
 
@@ -11,12 +11,13 @@ export default {
     props: ['name', 'memberCount', 'id'],
     computed: {
         teamLink() {
-            return {
-                name: 'team-member',
-                params: {
-                    teamID: this.id,
-                },
-            };
+            // return {
+            //     name: 'team-member',
+            //     params: {
+            //         teamID: this.id,
+            //     },
+            // };
+            return this.id;
         },
     },
 };
