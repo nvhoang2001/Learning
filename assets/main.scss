@@ -1,5 +1,5 @@
 /* Color */
-@import './colors';
+@import "./colors";
 /* Color */
 
 html {
@@ -8,4 +8,20 @@ html {
 
 .app {
     min-height: 100vh;
+}
+
+.page-enter-to,
+.page-leave {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.page-enter-active,
+.page-leave-active {
+    transition: opacity 0.5s;
+}
+.page-enter,
+.page-leave-to {
+    opacity: 0;
+    transform: scale(0.8);
 }

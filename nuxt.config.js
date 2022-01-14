@@ -11,24 +11,24 @@ export default {
     // When SSR
     loadingIndicator: {
         name: "folding-cube",
-        color: "#336CCE"
+        color: "#336CCE",
     },
 
     head: {
         title: "nuxt-boilerplate",
         htmlAttrs: {
-            lang: "en"
+            lang: "en",
         },
         meta: [
             { charset: "utf-8" },
             {
                 name: "viewport",
-                content: "width=device-width, initial-scale=1"
+                content: "width=device-width, initial-scale=1",
             },
             { hid: "description", name: "description", content: "" },
-            { name: "format-detection", content: "telephone=no" }
+            { name: "format-detection", content: "telephone=no" },
         ],
-        link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }]
+        link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }],
     },
 
     css: ["@/assets/main.scss", "@fortawesome/fontawesome-free/css/all.css"],
@@ -41,19 +41,19 @@ export default {
             Disallow:
                 process.env.APP_ENV === "production"
                     ? ["/*.json", "/*.xml"]
-                    : "/"
-        }
+                    : "/",
+        },
     ],
 
     server: {
         host: process.env.HOST || "localhost",
-        port: process.env.PORT || "3000"
+        port: process.env.PORT || "3000",
     },
 
     render: {
         http2: {
-            push: true
-        }
+            push: true,
+        },
     },
 
     // Disable eslint
@@ -61,7 +61,7 @@ export default {
     buildModules: [
         "@nuxtjs/fontawesome",
         "@nuxtjs/tailwindcss",
-        "@nuxtjs/google-analytics"
+        "@nuxtjs/google-analytics",
     ],
 
     modules: [],
@@ -70,20 +70,24 @@ export default {
         transpile: [/^element-ui/],
         postcss: {
             plugins: {
-                tailwindcss: "tailwind.config.js"
-            }
-        }
+                tailwindcss: "tailwind.config.js",
+            },
+        },
     },
 
     publicRuntimeConfig: {
         googleAnalytics: {
-            id: process.env.GOOGLE_ANALYTICS_ID
-        }
+            id: process.env.GOOGLE_ANALYTICS_ID,
+        },
     },
 
     env: {
         apiHost: process.env.API_HOST || "localhost",
         apiPath: process.env.API_PATH || "/api",
-        appUrl: process.env.APP_URL || "http://localhost:3000"
-    }
+        appUrl: process.env.APP_URL || "http://localhost:3000",
+    },
+    pageTransition: {
+        name: "page",
+        mode: "out-in",
+    },
 };

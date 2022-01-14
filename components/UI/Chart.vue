@@ -6,9 +6,10 @@ export default {
     extends: Line,
     props: {
         label: {
-            type: Array
+            type: Array,
+            required: true
         },
-        dataset: { type: Array },
+        dataset: { type: Array, required: true },
         options: {
             type: Object,
             default: null
