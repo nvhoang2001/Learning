@@ -1,2 +1,2 @@
-import MixSearch from "../../components/search/MixSearch.vue";
+import MixSearch from "~/components/search/MixSearch.vue";
 export default MixSearch;

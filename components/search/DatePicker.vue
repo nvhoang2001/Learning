@@ -6,6 +6,7 @@
             range-separator="-"
             :start-placeholder="firstPlaceholder"
             :end-placeholder="secondPlaceholder"
+            @change="onSelectDay"
         >
         </el-date-picker>
     </div>
@@ -15,8 +16,9 @@
 export default {
     props: {
         firstPlaceholder: { type: String, default: "Start day" },
-        secondPlaceholder: { type: String, default: "End day" }
+        secondPlaceholder: { type: String, default: "End day" },
     },
+    emits: ["select-date"],
 
     data() {
         return {
@@ -27,7 +29,7 @@ export default {
                         text: "Today",
                         onClick(picker) {
                             picker.$emit("pick", new Date());
-                        }
+                        },
                     },
                     {
                         text: "Yesterday",
@@ -35,7 +37,7 @@ export default {
                             const date = new Date();
                             date.setTime(date.getTime() - 3600 * 1000 * 24);
                             picker.$emit("pick", date);
-                        }
+                        },
                     },
                     {
                         text: "A week ago",
@@ -43,16 +45,16 @@ export default {
                             const date = new Date();
                             date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
                             picker.$emit("pick", date);
-                        }
-                    }
-                ]
-            }
+                        },
+                    },
+                ],
+            },
         };
     },
-    watch: {
-        value(range) {
-            console.log(range);
-        }
-    }
+    methods: {
+        onSelectDay(day) {
+            this.$emit("select-date", day);
+        },
+    },
 };
 </script>

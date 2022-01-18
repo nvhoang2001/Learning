@@ -1,6 +1,6 @@
 <template>
     <aside
-        class="h-full overflow-x-hidden "
+        class="h-full overflow-x-hidden"
         @mouseenter="expandMenu"
         @mouseleave="collapseMenu"
         ref="sideMenu"
@@ -8,7 +8,7 @@
     >
         <el-menu
             default-active="2"
-            class="el-menu-vertical h-full "
+            class="el-menu-vertical h-full"
             :collapse="isCollapse"
             :collapse-transition="false"
             router
@@ -17,36 +17,24 @@
                 <i class="el-icon-menu"></i>
                 <span slot="title">Dashboard</span>
             </el-menu-item>
-            <el-submenu index="/active">
+            <el-submenu index="/manage">
                 <template slot="title">
-                    <i class="el-icon-location"></i>
-                    <span slot="title">Navigator One</span>
+                    <i class="el-icon-s-management"></i>
+                    <span slot="title">Manage</span>
                 </template>
-                <el-menu-item-group>
-                    <span slot="title">Group One</span>
-                    <el-menu-item index="/active/1">item one</el-menu-item>
-                    <el-menu-item index="2-2">item two</el-menu-item>
-                </el-menu-item-group>
-                <el-menu-item-group title="Group Two">
-                    <el-menu-item index="2-3">item three</el-menu-item>
-                </el-menu-item-group>
-                <el-submenu index="2-4">
-                    <span slot="title">item four</span>
-                    <el-menu-item index="2-4-1">item one</el-menu-item>
-                </el-submenu>
+                <el-menu-item index="/manage/user">
+                    <i class="el-icon-s-custom"></i>
+                    <span>Employee</span>
+                </el-menu-item>
+                <el-menu-item index="/manage/products">
+                    <i class="el-icon-s-promotion"></i>
+                    <span>Products</span>
+                </el-menu-item>
+                <el-menu-item index="/manage/order">
+                    <i class="el-icon-s-order"></i>
+                    <span>Orders</span>
+                </el-menu-item>
             </el-submenu>
-            <el-menu-item index="3">
-                <i class="el-icon-menu"></i>
-                <span slot="title">Navigator Two</span>
-            </el-menu-item>
-            <el-menu-item index="4">
-                <i class="el-icon-document"></i>
-                <span slot="title">Navigator Three</span>
-            </el-menu-item>
-            <el-menu-item index="5">
-                <i class="el-icon-setting"></i>
-                <span slot="title">Navigator Four</span>
-            </el-menu-item>
         </el-menu>
     </aside>
 </template>
@@ -61,7 +49,7 @@ export default {
     data() {
         return {
             isCollapse: true,
-            menuWidth: ""
+            menuWidth: "",
         };
     },
     methods: {
@@ -116,7 +104,7 @@ export default {
                     this.menuWidth = `${menuWidth}px`;
                 }
             }, 1);
-        }
-    }
+        },
+    },
 };
 </script>
