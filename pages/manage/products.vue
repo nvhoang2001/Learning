@@ -11,9 +11,14 @@
                 @select-change="onSelectChange"
                 @input-change="onInputChange"
                 class="inline-block w-[60%]"
+                :labels="{
+                    'Product\'s name': 'name',
+                    'Product\'s id': 'id',
+                    Type: 'type',
+                }"
             />
         </div>
-        <div class="w-[fit-content] m-auto">
+        <div class="w-[fit-content] m-auto breakwords">
             <el-button
                 type="primary"
                 plain
@@ -24,7 +29,7 @@
                 <i class="fas fa-plus"></i> <span>Add</span>
             </el-button>
             <el-table
-                :data="computedUserData"
+                :data="computedProductData"
                 style="width: fit-content"
                 class="block mx-auto"
                 fit
@@ -70,7 +75,7 @@
                         <el-button
                             size="mini"
                             type="danger"
-                            @click="deleteUser(scope.row)"
+                            @click="deleteProduct(scope.row)"
                         >
                             Delete
                         </el-button>
@@ -78,15 +83,15 @@
                 </el-table-column>
             </el-table>
             <modal v-if="showAddForm">
-                <add-user
-                    class="absolute w-4/5 top-10 left-1/2 -translate-x-1/2 bg-white px-10 py-8"
+                <add-product
+                    class="absolute w-4/5 top-10 left-1/2 -translate-x-1/2 bg-white px-10 py-8 max-h-[85%] overflow-auto"
                     @close="closeAddForm"
                 />
             </modal>
             <modal v-if="showEditForm">
                 <edit-product
                     :id="editProduct"
-                    class="absolute w-4/5 top-10 left-1/2 -translate-x-1/2 bg-white px-10 py-8"
+                    class="absolute w-4/5 top-10 left-1/2 -translate-x-1/2 bg-white px-10 py-8 max-h-[85%] overflow-auto"
                     @close="
                         showEditForm = false;
                         editProduct = '';
@@ -98,9 +103,10 @@
 </template>
 
 <script>
-import EditProduct from "../../components/forms/EditProduct.vue";
+import EditProduct from "~/components/forms/EditProduct.vue";
+import AddProduct from "~/components/forms/AddProduct.vue";
 export default {
-    components: { EditProduct },
+    components: { EditProduct, AddProduct },
     name: "Products",
     data() {
         const products = this.$store.getters["products/getProducts"];
@@ -117,16 +123,16 @@ export default {
     },
 
     computed: {
-        computedUserData() {
-            let urs = this.products;
+        computedProductData() {
+            let prods = this.products;
 
             if (this.selectType.trim() !== "") {
-                urs = urs.filter((u) => {
-                    return u[this.selectType].includes(this.searchValue);
+                prods = prods.filter((p) => {
+                    return p[this.selectType].includes(this.searchValue);
                 });
             }
 
-            return urs;
+            return prods;
         },
     },
 
@@ -137,11 +143,6 @@ export default {
         onInputChange(val) {
             this.searchValue = val;
         },
-        onDayRangeSelect(val) {
-            if (!val) {
-                this.dayRange = [];
-            } else this.dayRange = val;
-        },
         openAddForm() {
             this.showAddForm = true;
         },
@@ -149,13 +150,13 @@ export default {
             this.showAddForm = false;
         },
 
-        deleteUser(rowData) {
-            const userId = rowData.id;
-            this.$store.dispatch("users/deleteUser", userId);
+        deleteProduct(rowData) {
+            const prodId = rowData.id;
+            this.$store.dispatch("products/deleteProduct", prodId);
         },
         editProductData(data) {
-            const userId = data.id;
-            this.editProduct = userId;
+            const prodId = data.id;
+            this.editProduct = prodId;
             this.showEditForm = true;
         },
         clickHandler(img) {
@@ -164,3 +165,9 @@ export default {
     },
 };
 </script>
+
+<style>
+.breakwords .cell {
+    word-break: normal;
+}
+</style>

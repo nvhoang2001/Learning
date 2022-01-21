@@ -4,22 +4,13 @@
         status-icon
         ref="editForm"
         label-width="120px"
-        @submit.native.prevent="submitForm()"
+        :rules="rules"
+        @submit.native.prevent="submitForm('editForm')"
     >
         <h2 class="text-xl font-semibold">{{ title }}</h2>
 
         <el-form-item label="User's id">
             <p>{{ editForm.id }}</p>
-        </el-form-item>
-        <el-form-item label="Release Date">
-            <el-date-picker
-                v-model="editForm.description['Release Date']"
-                type="date"
-                placeholder="Pick a day"
-                autocomplete="off"
-                name="date"
-            >
-            </el-date-picker>
         </el-form-item>
         <el-form-item class="col-divide" label="Name">
             <div class="flex justify-between">
@@ -116,10 +107,8 @@
                     >
                         <img
                             :src="
-                                uploadImage
-                                    ? image ||
-                                      'https://www.namepros.com/attachments/empty-png.89209/'
-                                    : editForm.image
+                                (uploadImage ? image : editForm.image) ||
+                                'https://www.namepros.com/attachments/empty-png.89209/'
                             "
                             alt=""
                             class="object-cover w-full h-full"
@@ -127,6 +116,73 @@
                     </div>
                 </div>
             </template>
+        </el-form-item>
+        <el-form-item label="Description" prop="desc" label-position="top">
+            <!-- This won'r re-render when you change once of its elements with '=' -->
+            <div ref="descRow">
+                <el-form-item
+                    v-for="(value, index) in editForm.description"
+                    :key="index"
+                >
+                    <el-row :gutter="20" class="my-5 flex items-start">
+                        <el-col :span="6">
+                            <el-form-item
+                                :prop="`description[${index}][0]`"
+                                :rules="{
+                                    required: true,
+                                    message: 'Description name is required',
+                                    trigger: 'blur',
+                                }"
+                            >
+                                <el-input
+                                    type="text"
+                                    v-model="value[0]"
+                                    clearable
+                                >
+                                    <!-- :value="value[0]" -->
+                                    <!-- @input="editDescription(index, 0, $event)" -->
+                                </el-input>
+                            </el-form-item>
+                        </el-col>
+
+                        <el-col :span="15">
+                            <el-form-item
+                                :prop="`description[${index}][1]`"
+                                :rules="{
+                                    required: true,
+                                    message: 'Description is required',
+                                    trigger: 'blur',
+                                }"
+                            >
+                                <el-input
+                                    type="textarea"
+                                    :autosize="{ minRows: 2 }"
+                                    v-model="value[1]"
+                                    resize="none"
+                                    clearable
+                                >
+                                </el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="3">
+                            <el-button
+                                type="danger"
+                                size="mini"
+                                style="display: block; margin-left: auto"
+                                @click="removeDescription(index)"
+                                >Remove</el-button
+                            >
+                        </el-col>
+                    </el-row>
+                </el-form-item>
+            </div>
+            <el-row>
+                <el-col :span="24" class="flex justify-end">
+                    <el-button size="mini" @click="addDescription"
+                        >Add
+                    </el-button>
+                </el-col>
+            </el-row>
         </el-form-item>
         <el-form-item>
             <div class="flex justify-between">
@@ -145,9 +201,10 @@
         </el-form-item>
         <el-dialog
             title="Do you really want to close?"
-            :visible="showDialog"
+            :visible.sync="showDialog"
             width="30%"
             :modal="false"
+            append-to-body
         >
             <span slot="footer" class="dialog-footer">
                 <el-button @click="showDialog = false"> Cancel </el-button>
@@ -166,6 +223,8 @@
 </template>
 
 <script>
+import _deepClone from "lodash/cloneDeep";
+
 export default {
     emits: ["close"],
 
@@ -194,19 +253,18 @@ export default {
                   category: "",
                   description: {},
                   image: "",
-                  author: "",
+                  author: "admin",
               }
-            : {
-                  ...this.$store.getters["products/getAProduct"](this.id),
-              };
+            : _deepClone(this.$store.getters["products/getAProduct"](this.id));
+        const description = Object.entries(productData.description);
+
         return {
-            editForm: {
-                ...productData,
-            },
+            editForm: { ...productData, description },
             showDialog: false,
             touched: false,
             uploadImage: false,
             image: null,
+            rules: {},
         };
     },
     watch: {
@@ -226,19 +284,37 @@ export default {
     methods: {
         uploadImageHandler(e) {
             const file = e.target.files[0];
-            this.image = URL.createObjectURL(file);
+            const reader = new FileReader();
+
+            reader.addEventListener("load", () => {
+                this.image = reader.result;
+                this.editForm.image = this.image;
+            });
+            reader.readAsDataURL(file);
+            // this.image = URL.createObjectURL(file);
         },
 
-        submitForm() {
-            const productData = {
-                ...this.editForm,
-            };
-            const action = this.isCreate
-                ? "products/addProduct"
-                : "products/updateProduct";
+        submitForm(formName) {
+            this.$refs[formName].validate((valid) => {
+                if (!valid) {
+                    return false;
+                } else {
+                    const description = Object.fromEntries(
+                        this.editForm.description
+                    );
 
-            this.$store.dispatch(action, productData);
-            this.$emit("close");
+                    const productData = {
+                        ...this.editForm,
+                        description,
+                    };
+                    const action = this.isCreate
+                        ? "products/addProduct"
+                        : "products/updateProduct";
+
+                    this.$store.dispatch(action, productData);
+                    this.$emit("close");
+                }
+            });
         },
         resetForm() {
             this.editForm.brand = "";
@@ -248,6 +324,7 @@ export default {
             this.editForm.description = {};
             this.editForm.image = "";
             this.editForm.author = "";
+            this.image = "";
         },
         toggleImageUploadMode() {
             if (!this.uploadImage) {
@@ -259,6 +336,23 @@ export default {
             if (this.touched) {
                 this.showDialog = true;
             } else this.$emit("close");
+        },
+        addDescription() {
+            this.editForm.description.push(["", ""]);
+            this.$nextTick(() => {
+                this.$refs.descRow.lastChild
+                    .querySelector(".el-input__inner")
+                    .focus();
+            });
+        },
+        // editDescription(index, key, value) {
+        //     const newDes = [...this.editForm.description[index]];
+        //     newDes[key] = value;
+
+        //     this.editForm.description.splice(index, 1, newDes);
+        // },
+        removeDescription(index) {
+            this.editForm.description.splice(index, 1);
         },
     },
 };

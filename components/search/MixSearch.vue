@@ -13,9 +13,12 @@
                 :placeholder="selectPlaceholder"
                 @change="onSelectChange"
             >
-                <el-option label="User's id" value="id"></el-option>
-                <el-option label="User's name" value="name"></el-option>
-                <el-option label="State" value="state"></el-option>
+                <el-option
+                    v-for="(value, label) in labels"
+                    :key="label"
+                    :label="label"
+                    :value="value"
+                ></el-option>
             </el-select>
         </el-input>
     </div>
@@ -31,6 +34,10 @@ export default {
         selectPlaceholder: {
             type: String,
             default: "Select",
+        },
+        labels: {
+            type: Object,
+            required: true,
         },
     },
     emits: ["select-change", "input-change"],

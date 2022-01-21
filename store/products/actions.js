@@ -1,15 +1,15 @@
 export default {
     checkID(context, id) {
-        const isExisted = !!context.state.usersData.find((u) => u.id === id);
+        const isExisted = !!context.state.products.find((p) => p.id === id);
         return isExisted;
     },
     deleteProduct(context, id) {
         context.commit("deleteProduct", id);
     },
-    addProduct(context, usrData) {
-        context.commit("addProduct", usrData);
+    addProduct(context, prodData) {
+        context.commit("addProduct", prodData);
     },
-    updateProduct(context, updatedUsr) {
-        context.commit("updateProduct", updatedUsr);
+    updateProduct(context, updatedProd) {
+        context.commit("updateProduct", updatedProd);
     },
 };

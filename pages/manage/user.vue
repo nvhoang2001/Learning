@@ -16,6 +16,11 @@
                 @select-change="onSelectChange"
                 @input-change="onInputChange"
                 class="inline-block w-[60%]"
+                :labels="{
+                    'User\'s name': 'name',
+                    'User\'s id': 'id',
+                    'Zip code': 'zip',
+                }"
             />
         </div>
         <div class="w-[fit-content] m-auto">

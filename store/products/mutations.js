@@ -5,7 +5,7 @@ export default {
     },
     updateProduct(state, updatedProduct) {
         const prod = state.products.find((p) => p.id === updatedProduct.id);
-        for (const key in prod) {
+        for (const key in updatedProduct) {
             prod[key] = updatedProduct[key];
         }
     },
