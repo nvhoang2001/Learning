@@ -16,7 +16,7 @@
                             v-model="email"
                             type="email"
                             clearable
-                            style="width: 95%; display: block;"
+                            style="width: 95%; display: block"
                             class="ml-auto"
                         >
                         </el-input>
@@ -32,20 +32,26 @@
                             v-model="password"
                             type="password"
                             clearable
-                            style="width: 95%; display: block;"
+                            style="width: 95%; display: block"
                             class="ml-auto"
                         >
                         </el-input>
                     </label>
                 </div>
                 <div class="mt-4">
-                    <el-button type="primary" plain native-type="submit">
-                        {{ submitMode }}
+                    <el-button
+                        type="primary"
+                        plain
+                        native-type="submit"
+                        :loading="submitting"
+                    >
+                        {{ submitting ? "Submitting" : submitMode }}
                     </el-button>
                     <el-button
                         type="text"
                         @click="switchMode"
                         class="text-black"
+                        :disabled="submitting"
                     >
                         Switch to {{ changeMode }}
                     </el-button>
@@ -64,8 +70,9 @@ export default {
     data() {
         return {
             mode: "signin",
+            submitting: false,
             email: "",
-            password: ""
+            password: "",
         };
     },
     computed: {
@@ -77,24 +84,26 @@ export default {
         },
         changeMode() {
             return this.mode === "signin" ? "sign up" : "sign in";
-        }
+        },
     },
     methods: {
         ...mapActions("auth", ["login"]),
         onSubmit() {
+            this.submitting = true;
             const account = {
                 email: this.email,
-                password: this.password
+                password: this.password,
             };
 
-            this.login(account).then(token => {
+            this.login(account).then((token) => {
+                this.submitting = false;
                 this.$router.push("/");
             });
         },
         switchMode() {
             this.mode = this.mode === "signin" ? "signup" : "signin";
-        }
-    }
+        },
+    },
 };
 </script>
 
