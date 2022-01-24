@@ -27,17 +27,20 @@ export default {
                 datasets: [
                     {
                         label: "Follower",
-                        backgroundColor: "#003f5c",
+                        backgroundColor: "#1d4ed8aa",
+                        borderColor: "#1d4ed8",
                         data: this.$store.getters["chartData/getFollower"],
                     },
                     {
                         label: "Visitor",
-                        backgroundColor: "#2f4b7c",
+                        backgroundColor: "#059669aa",
+                        borderColor: "#059669",
                         data: this.$store.getters["chartData/getVisitor"],
                     },
                     {
                         label: "Revenue",
-                        backgroundColor: "#665191",
+                        backgroundColor: "#dc2626aa",
+                        borderColor: "#dc2626",
                         data: this.$store.getters["chartData/getRevenue"],
                     },
                 ],
@@ -51,7 +54,7 @@ export default {
                 },
                 title: {
                     display: true,
-                    text: "This month revenue",
+                    text: "This month data",
                     fontSize: 24,
                     fontColor: "#6b7280",
                 },
