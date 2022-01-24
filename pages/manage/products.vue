@@ -159,9 +159,6 @@ export default {
             this.editProduct = prodId;
             this.showEditForm = true;
         },
-        clickHandler(img) {
-            console.log(img);
-        },
     },
 };
 </script>
