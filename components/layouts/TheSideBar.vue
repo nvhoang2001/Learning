@@ -1,16 +1,23 @@
 <template>
     <aside
-        class="h-full overflow-x-hidden"
+        class="h-full overflow-x-hidden relative"
         @mouseenter="expandMenu"
         @mouseleave="collapseMenu"
         ref="sideMenu"
-        :style="{ width: menuWidth }"
+        :style="{ width: isMinimize ? menuWidth : '300px' }"
     >
         <el-menu
-            default-active="2"
+            :default-active="$route.path"
             class="el-menu-vertical h-full"
-            :collapse="isCollapse"
+            :collapse="isMinimize && isCollapse"
             :collapse-transition="false"
+            :active-text-color="activeColor"
+            :background-image="backgroundImage"
+            background-color="transparent"
+            :style="{
+                backgroundImage: `url(${backgroundImage})`,
+                backgroundColor: backgroundColor,
+            }"
             router
         >
             <el-menu-item index="/">
@@ -36,6 +43,10 @@
                 </el-menu-item>
             </el-submenu>
         </el-menu>
+        <div
+            class="background absolute top-0 left-0 h-full w-full opacity-25 pointer-events-none"
+            :style="{ backgroundColor }"
+        ></div>
     </aside>
 </template>
 
@@ -52,8 +63,27 @@ export default {
             menuWidth: "",
         };
     },
+    computed: {
+        activeColor() {
+            return this.$store.getters["theme/getFilterColor"];
+        },
+        backgroundColor() {
+            return this.$store.getters["theme/getBackgroundColor"];
+        },
+        isMinimize() {
+            return this.$store.getters["theme/getSizeState"];
+        },
+        backgroundImage() {
+            if (!this.$store.getters["theme/getBackgroundImageState"])
+                return "";
+            return this.$store.getters["theme/getBackgroundImageURL"];
+        },
+    },
     methods: {
         expandMenu() {
+            if (!this.$store.getters["theme/getSizeState"]) {
+                return;
+            }
             if (isEnter) {
                 if (colTimer) {
                     clearInterval(colTimer);
@@ -80,6 +110,10 @@ export default {
             }, 1);
         },
         collapseMenu(e) {
+            if (!this.$store.getters["theme/getSizeState"]) {
+                return;
+            }
+
             if (isEnter) {
                 if (expTimer) {
                     clearInterval(expTimer);
