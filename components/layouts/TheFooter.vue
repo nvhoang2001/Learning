@@ -4,7 +4,7 @@
             <ul class="flex gap-10 w-full justify-start">
                 <li>
                     <nuxt-link
-                        to="#"
+                        to="/about"
                         class="font-semibold p-1 hover:text-[#1d52ff]"
                     >
                         About Us
@@ -28,9 +28,7 @@
                 </li>
             </ul>
         </nav>
-        <div class="font-semibold">
-            Made for a better web
-        </div>
+        <div class="font-semibold">Made for a better web</div>
     </div>
 </template>
 
