@@ -99,8 +99,8 @@ export default {
     emits: ["mouseleave"],
     data() {
         return {
-            miniSidebar: true,
-            useImage: true,
+            miniSidebar: this.$store.getters["theme/getSizeState"],
+            useImage: this.$store.getters["theme/getBackgroundImageState"],
             filterList: ["#ef4444", "#10b981", "#93c5fd", "#3b82f6", "#8b5cf6"],
             backgroundColors: ["#000", "#fff", "#10b981", "#2563eb"],
             backgroundImages: [
