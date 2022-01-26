@@ -1,10 +1,9 @@
 <template>
     <aside
-        class="h-full overflow-x-hidden relative"
+        class="h-full overflow-x-hidden relative aside-menu"
         @mouseenter="expandMenu"
         @mouseleave="collapseMenu"
         ref="sideMenu"
-        :style="{ width: isMinimize ? menuWidth : '300px' }"
     >
         <el-menu
             :default-active="$route.path"
@@ -16,10 +15,17 @@
             background-color="transparent"
             :style="{
                 backgroundImage: `url(${backgroundImage})`,
-                backgroundColor: backgroundColor,
+                backgroundColor,
             }"
             router
         >
+            <div class="pt-5 px-[10px] flex justify-start items-center">
+                <div class="w-12 h-12 rounded-full bg-white"></div>
+                <p class="pl-4 text-lg username">User name</p>
+            </div>
+            <div class="p-3">
+                <el-divider></el-divider>
+            </div>
             <el-menu-item index="/">
                 <i class="el-icon-menu"></i>
                 <span slot="title">Dashboard</span>
@@ -52,8 +58,6 @@
 
 <script>
 let isEnter = false;
-const collapsedWidth = 64;
-const accumulator = 4;
 let colTimer, expTimer;
 
 export default {
@@ -86,28 +90,16 @@ export default {
             }
             if (isEnter) {
                 if (colTimer) {
-                    clearInterval(colTimer);
+                    clearTimeout(colTimer);
                     colTimer = null;
                 } else return;
             }
             isEnter = true;
-            let menuWidth = Math.max(
-                collapsedWidth,
-                parseInt(getComputedStyle(this.$refs.sideMenu).width)
-            );
-
-            this.isCollapse = false;
-            expTimer = setInterval(() => {
-                if (menuWidth >= 300) {
-                    clearInterval(expTimer);
-                    expTimer = null;
-                    menuWidth = 300;
-                    isEnter = false;
-                } else {
-                    menuWidth += accumulator;
-                }
-                this.menuWidth = `${menuWidth}px`;
-            }, 1);
+            expTimer = setTimeout(() => {
+                this.isCollapse = false;
+                expTimer = null;
+                isEnter = false;
+            }, 125);
         },
         collapseMenu(e) {
             if (!this.$store.getters["theme/getSizeState"]) {
@@ -116,29 +108,36 @@ export default {
 
             if (isEnter) {
                 if (expTimer) {
-                    clearInterval(expTimer);
+                    clearTimeout(expTimer);
                     expTimer = null;
                 } else return;
             }
             isEnter = true;
 
-            let menuWidth = Math.min(
-                300,
-                parseInt(getComputedStyle(this.$refs.sideMenu).width)
-            );
-            colTimer = setInterval(() => {
-                if (menuWidth <= collapsedWidth) {
-                    this.isCollapse = true;
-                    this.menuWidth = "auto";
-                    clearInterval(colTimer);
-                    colTimer = null;
-                    isEnter = false;
-                } else {
-                    menuWidth -= accumulator;
-                    this.menuWidth = `${menuWidth}px`;
-                }
-            }, 1);
+            colTimer = setTimeout(() => {
+                this.isCollapse = true;
+                colTimer = null;
+                isEnter = false;
+            }, 375);
         },
     },
 };
 </script>
+
+<style lang="scss" scoped>
+.username {
+    display: none;
+}
+.aside-menu {
+    width: 64px;
+    transition: width 0.5s;
+
+    &:hover {
+        width: 300px;
+
+        .username {
+            display: block;
+        }
+    }
+}
+</style>
