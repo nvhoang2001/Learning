@@ -22,16 +22,25 @@
             >
                 {{ label }}
             </span>
-            <component
-                :is="type"
+
+            <input
                 :class="'inline-block w-full h-full ' + inputClass"
                 :type="nativeType"
                 :id="id"
                 :name="name"
+                v-if="type === 'input'"
                 :value="value"
                 @input="$emit('input', $event.target.value)"
-                ref="input"
             />
+            <textarea
+                :class="'inline-block w-full h-full ' + inputClass"
+                :type="nativeType"
+                :id="id"
+                :name="name"
+                v-else
+                :value="value"
+                @input="$emit('input', $event.target.value)"
+            ></textarea>
         </label>
         <p v-if="errorState" class="text-red-500 text-sm">
             {{ errorMgs }}
@@ -85,22 +94,16 @@ export default {
         },
     },
 
-    emits: ["input", "reset-error-state"],
+    emits: ["input", "reset-error-state", "reset"],
     data() {
-        const id = randomGenerateString(15);
+        const id = this.index + "_" + randomGenerateString(15);
         return { id };
     },
     watch: {
         value: [
             function () {
                 const debouncedFunction = _debounce(() => {
-                    this.UpdateDOMValue();
-                }, 100);
-                debouncedFunction();
-            },
-            function () {
-                const debouncedFunction = _debounce(() => {
-                    this.inputBlurHandler();
+                    this.inputValidateHandler();
                 }, 500);
                 debouncedFunction();
             },
@@ -122,10 +125,7 @@ export default {
         },
     },
     methods: {
-        UpdateDOMValue() {
-            this.$refs["input"].value = this.value;
-        },
-        inputBlurHandler() {
+        inputValidateHandler() {
             if (typeof this.$attrs.validator === "function") {
                 if (this.$attrs.validator(this.value)) {
                     this.errorState = false;
