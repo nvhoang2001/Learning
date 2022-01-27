@@ -12,7 +12,7 @@
                 </li>
                 <li>
                     <nuxt-link
-                        to="#"
+                        to="/blog"
                         class="font-semibold p-1 hover:text-[#1d52ff]"
                     >
                         Blog
