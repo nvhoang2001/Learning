@@ -1,17 +1,10 @@
 import Cookies from "js-cookie";
 
 export default {
-    login(context, account) {
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                resolve("121241242141241232");
-            }, 1500);
-        }).then((token) => {
-            console.log(account);
-            Cookies.set("token", token);
-            context.commit("setToken", token);
-            return token;
-        });
+    login(context, auth) {
+        Cookies.set("token", auth.idToken);
+        context.commit("setToken", auth.idToken);
+        return auth.token;
     },
     logout(context) {
         context.commit("setToken", "");

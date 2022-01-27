@@ -63,6 +63,12 @@
 
 <script>
 import { mapActions } from "vuex";
+import axios from "axios";
+
+const SIGNUP_END_POINT =
+    "https://identitytoolkit.googleapis.com/v1/accounts:signUp";
+const SIGNIN_END_POINT =
+    "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword";
 
 export default {
     layout: "auth",
@@ -93,12 +99,37 @@ export default {
             const account = {
                 email: this.email,
                 password: this.password,
+                returnSecureToken: true,
             };
 
-            this.login(account).then((token) => {
-                this.submitting = false;
-                this.$router.push("/");
-            });
+            const url = `${
+                this.mode === "signin" ? SIGNIN_END_POINT : SIGNUP_END_POINT
+            }?key=AIzaSyDomcBZ15Nw5sSM3Y8963VPOO3gxY0__30`;
+
+            axios
+                .post(url, account, {
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                })
+                .then((res) => {
+                    return res.data;
+                })
+                .then((data) => {
+                    return this.login(data);
+                })
+                .then(() => {
+                    this.submitting = false;
+                    this.$router.push("/");
+                })
+                .catch((err) => {
+                    this.$notify({
+                        title: "Bad request 400",
+                        message: "Invalid email or password!",
+                        type: "error",
+                    });
+                    this.submitting = false;
+                });
         },
         switchMode() {
             this.mode = this.mode === "signin" ? "signup" : "signin";
